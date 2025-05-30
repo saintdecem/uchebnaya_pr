@@ -1,0 +1,78 @@
+#pragma once
+#include <SFML/Graphics.hpp>
+using namespace sf;
+
+const int H = 10; //высота уровня
+const int W = 33; //ширина
+const int ts = 50; //размер блока
+float offsetX = 0; //смещение труб
+
+class lever {
+public:
+	String lever1[H] = {
+		"       X    X    X    X    X    C",
+		"       B    B    B    B    B    C",
+		"                                C",
+		"                                C",
+		"       A    A    A    A    A    C",
+		"       X    X    X    X    X    C",
+		"       X    X    X    X    X    C",
+		"       X    X    X    X    X    C",
+		"       X    X    X    X    X    C",
+		"YYYYYYYXYYYYXYYYYXYYYYXYYYYXYYYYC",
+	};
+
+	String lever2[H] = {
+		"       X    X    X    X    X    C",
+		"       B    X    X    X    X    C",
+		"            B    X    X    X    C",
+		"                 B    X    B    C",
+		"       A              B         C",
+		"       X    A                   C",
+		"       X    X    A         A    C",
+		"       X    X    X    A    X    C",
+		"       X    X    X    X    X    C",
+		"YYYYYYYXYYYYXYYYYXYYYYXYYYYXYYYYC",
+	};
+
+	String lever3[H] = {
+		"       B    X    X    X    B    C",
+		"            X    X    X         C",
+		"            B    X    B         C",
+		"       A         X         A    C",
+		"       X         B         X    C",
+		"       X    A         A    X    C",
+		"       X    X         X    X    C",
+		"       X    X    A    X    X    C",
+		"       X    X    X    X    X    C",
+		"YYYYYYYXYYYYXYYYYXYYYYXYYYYXYYYYC",
+	};
+
+	String lever4[H] = {
+		"            X    X    X    X    C",
+		"            X    X    X    X    C",
+		"       A    B    X    B    X    C",
+		"       X         X         B    C",
+		"       X         B              C",
+		"       X    A         A         C",
+		"       X    X         X    A    C",
+		"       X    X    A    X    X    C",
+		"       X    X    X    X    X    C",
+		"YYYYYYYXYYYYXYYYYXYYYYXYYYYXYYYYC",
+	};
+
+	String lever5[H] = {
+		"       X    X    X    X    X    C",
+		"       B    X    B    X    B    C",
+		"            X         X         C",
+		"            X         X         C",
+		"       A    B    A    B    A    C",
+		"       X         X         X    C",
+		"       X         X         X    C",
+		"       X    A    X    A    X    C",
+		"       X    X    X    X    X    C",
+		"YYYYYYYXYYYYXYYYYXYYYYXYYYYXYYYYC",
+	};
+};
+
+String title[H]; //текущий уровень
