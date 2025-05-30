@@ -1,0 +1,128 @@
+#include "player.h"
+#include "menu.h"
+#include <SFML/Graphics.hpp>
+
+int main()
+{
+	RenderWindow window(VideoMode(288, 500), "Flappy Bird");
+	lever LV; //загрузка уровней
+	//создание игрового поля
+	for (int i = 0; i < H; i++)
+		title[i] = "                                 ";
+
+
+	Texture f; //фон
+	f.loadFromFile("C:/Users/Lenovo/OneDrive/Рабочий стол/game_/background.png");
+	Sprite fon(f);
+
+	Texture picture; //птичка
+	picture.loadFromFile("C:/Users/Lenovo/OneDrive/Рабочий стол/game_/player.png");
+	player p(picture);
+
+	Texture pipe; //препятствия (трубы)
+	pipe.loadFromFile("C:/Users/Lenovo/OneDrive/Рабочий стол/game_/pipe.png");
+	Sprite plat(pipe);
+
+	Texture button; //кнопки меню
+	button.loadFromFile("C:/Users/Lenovo/OneDrive/Рабочий стол/game_/button2.png");
+	menu menu(button);
+
+	int lev = 0; //текущий уровень
+	Clock clock; //таймер
+
+	while (window.isOpen())
+	{
+		float time = clock.getElapsedTime().asMicroseconds(); //игровое время
+		clock.restart();
+		time = time / 800;
+
+		Vector2i pos = Mouse::getPosition(window); //позиция мыши
+
+		Event event;
+		while (window.pollEvent(event))
+		{
+			if (event.type == Event::Closed) {
+				window.close();
+			}
+
+			if (event.type == Event::MouseButtonPressed) //нажата кнопка на мышке?
+				if (event.key.code == Mouse::Left) {
+					for (int i = 0; i < total_levels; i++) //обработка кликов по меню
+						if (menu.open[i] && menu.sprite[i].getGlobalBounds().contains(pos.x, pos.y)) {
+							for (int j = 0; j < H; j++) { //загрузка уровня 
+								switch (i) {
+								case 0: title[j] = LV.lever1[j]; break;
+								case 1: title[j] = LV.lever2[j]; break;
+								case 2: title[j] = LV.lever3[j]; break;
+								case 3: title[j] = LV.lever4[j]; break;
+								case 4: title[j] = LV.lever5[j]; break;
+								}
+								lev = i;
+								menu.hello = false; //скрыть меню
+								play = true; //начать игру
+						    }
+						}
+
+					if (play) {
+						p.dy = -0.2; //поднимается наверх
+						sound.jump.play();
+					}
+				}
+		}
+
+		if (play) {
+			p.dx = 0.05f + (lev * 0.01f); //увеличение скорости с каждым уровнем
+			offsetX = p.rect.left - 5; //движок игры (трубы двигаются)
+		}
+
+		if (win || lose) {
+			t++; //таймер задержки
+		}
+		if ((t == 1000 && win) || (t == 3000 && lose)) {
+			if (win) {
+				if (lev < total_levels) { 
+					menu.open[lev + 1] = true;//разблокируется следующий уровень
+				}
+				sound.win.play();
+			}
+			//сброс состояния игры
+			t = 0;
+			play = win = lose = false;
+			menu.hello = true;
+			offsetX = 0;
+			p.rect = FloatRect(ts, ts, 38, 25); //возврат птички в начальную позицию
+			p.dy = 0;
+			//очистка поля
+			for (int i = 0; i < H; i++) {
+				title[i] = "                                 ";
+			}
+		}
+
+		p.update(time); //обновление позиции птички
+		menu.update(); //обновление меню
+		window.clear(Color::White);
+		window.draw(fon); //отрисовка фона
+		for (int i = 0; i < H; i++) //игровое поле
+			for (int j = 0; j < W; j++) {
+				if (title[i][j] == 'X')
+					plat.setTextureRect(IntRect(ts, 0, ts, ts)); //труба
+				if (title[i][j] == 'B')
+					plat.setTextureRect(IntRect(0, ts, ts, -ts)); //верхняя труба
+				if (title[i][j] == 'A')
+					plat.setTextureRect(IntRect(0, 0, ts, ts)); //нижняя труба
+				if (title[i][j] == 'C')
+					plat.setTextureRect(IntRect(ts * 2, 0, ts, ts)); //финиш
+				if (title[i][j] == ' ' || title[i][j] == 'Y') //земля
+					continue;
+
+				plat.setPosition(j * ts - offsetX, i * ts);
+				window.draw(plat);
+			}
+		window.draw(p.sprite); //отрисовка птички
+		for (int i = 0; i < 5; i++) //рисуем меню
+			if (menu.hello)
+				window.draw(menu.sprite[i]);
+		window.display(); //обновление экрана
+	}
+	return 0;
+}
