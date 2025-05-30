@@ -1,0 +1,7 @@
+#pragma once
+//файл с переменными для управления игрой
+bool play = false;
+bool win = false;
+bool lose = false;
+int t = 0; 
+float birdSpeed = 0.05f; //скорость птички
