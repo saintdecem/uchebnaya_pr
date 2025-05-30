@@ -1,0 +1,36 @@
+#pragma once
+#include <SFML/Graphics.hpp>
+using namespace sf;
+
+const int total_levels = 5;
+class menu {
+public:
+	Sprite sprite[total_levels]; //кнопки
+	bool open[total_levels]; //доступные кнопки
+	bool hello; //отображение меню
+
+	menu(Texture& image) {
+		hello = true; //меню активно при старте
+		open[0] = true; //первый уровень доступен
+		for (int i = 1; i < 5; i++)
+			open[i] = false; //остальные уровни заблокированы
+
+		for (int i = 0; i < 5; i++) {
+			sprite[i].setTexture(image);
+			sprite[i].setPosition(70, 75 + 75 * i); //расположение кнопок
+		}
+	}
+
+	void update() {
+		for (int i = 0; i < total_levels; i++) {
+			if (open[i]) {
+				sprite[i].setTextureRect(IntRect(0, 40 * i, 150, 40)); //активная кнопка
+				sprite[i].setColor(Color::White);
+			}
+			else {
+				sprite[i].setTextureRect(IntRect(0, 40 * 5, 150, 40)); //заблокированная
+				sprite[i].setColor(Color(150, 150, 150));
+			}
+		}
+	}
+};
