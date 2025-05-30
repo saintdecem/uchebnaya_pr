@@ -1,0 +1,22 @@
+#pragma once
+#include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
+using namespace sf;
+
+class set_sound {
+public:
+	SoundBuffer s1, s2, s3;
+	Sound jump, win, fail;
+
+	set_sound() {
+		s1.loadFromFile("C:/Users/Lenovo/OneDrive/Рабочий стол/game_/jump.ogg");
+		s2.loadFromFile("C:/Users/Lenovo/OneDrive/Рабочий стол/game_/win.ogg");
+		s3.loadFromFile("C:/Users/Lenovo/OneDrive/Рабочий стол/game_/fail.ogg");
+
+		jump.setBuffer(s1);
+		win.setBuffer(s2);
+		fail.setBuffer(s3);
+	}
+};
+
+set_sound sound;
