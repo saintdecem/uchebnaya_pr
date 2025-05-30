@@ -1,0 +1,75 @@
+#pragma once
+#include "title.h"
+#include "mvar.h"
+#include "sound.h"
+
+class player {
+public:
+	float dx, dy; //движение птички (скорость)
+	FloatRect rect; //позиция и размер
+	bool onGround; //на земле?
+	Sprite sprite;
+	float curFrame; //текущий кадр анимации
+
+	player(Texture& image) {
+		sprite.setTexture(image);
+		rect = FloatRect(ts, ts, 38, 25); //начальная позиция и размер
+		sprite.setTextureRect(IntRect(0, 0, 38, 25)); //первый кадр анимации
+		dx = dy = 0;
+		curFrame = 0;
+	}
+
+	void update(float time) //движок птички
+	{
+		rect.left += dx * time; //двигамся по х
+		Collision(0); //проверка на столкновение
+
+		if (!onGround && (play || lose)) //если не на земле
+			dy = dy + 0.0005f * time; //двигаемся по у
+		rect.top += dy * time;
+		onGround = false;
+		Collision(1);
+
+		if (!lose) { 
+			curFrame += 0.005f * time;
+			if (curFrame > 3) {
+				curFrame -= 3;
+			}
+		}
+		sprite.setTextureRect(IntRect(38 * int(curFrame), 0, 38, 25));
+		sprite.setPosition(rect.left - offsetX, rect.top);
+		dx = 0;
+	}
+
+	void Collision(float dir) {
+		for (int i = rect.top / ts; i < (rect.top + rect.height) / ts; i++) {
+			for (int j = rect.left / ts; j < (rect.left + rect.width) / ts; j++) {
+				if (title[i][j] == 'A' || title[i][j] == 'B' || title[i][j] == 'X' || title[i][j] == 'Y') {
+					//обработка столкновений с препятствиями
+					if (dx > 0 && dir == 0)
+						rect.left = j * ts - rect.width; //справа
+					if (dx < 0 && dir == 0)
+						rect.left = j * ts + ts; //слева
+					if (dy > 0 && dir == 1) { //снизу
+						rect.top = i * ts - rect.height;
+						dy = 0;
+						onGround = true;
+					}
+					if (dy < 0 && dir == 1) { //сверху
+						rect.top = i * ts + ts;
+						dy = 0;
+					}
+
+					lose = true;
+					play = false;
+					sound.fail.play();
+					return;
+				}
+				if (title[i][j] == 'C') {
+					win = true;
+					return;
+				}
+			}
+		}
+	}
+};
